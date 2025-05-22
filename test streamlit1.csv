@@ -1,0 +1,25 @@
+﻿Perspective,Subdiv,Budget,Expense,Usage,Revenue,Profit,Month,Produk,Number of customer,Customer satisfaction,Target,Realization,Target vs Real,Velocity,Quality,Current MP,Needed MP,Competency,Turnover ratio
+Financial,Subdiv 1,100,90,90%,1000,400,Jan-25,,,,,,,,,,,,
+Financial,Subdiv 2,100,80,80%,1200,500,Jan-25,,,,,,,,,,,,
+Financial,Subdiv 3,100,75,75%,1300,800,Jan-25,,,,,,,,,,,,
+Financial,Subdiv 1,100,85,85%,1000,400,Feb-25,,,,,,,,,,,,
+Financial,Subdiv 2,100,90,90%,1200,500,Feb-25,,,,,,,,,,,,
+Financial,Subdiv 3,100,100,100%,1300,800,Feb-25,,,,,,,,,,,,
+Customer n Service,,,,,,,Jan-25,PRODUK 1,10,4.5,,,,,,,,,
+Customer n Service,,,,,,,Jan-25,PRODUK 2,11,4.7,,,,,,,,,
+Customer n Service,,,,,,,Jan-25,PRODUK 3,12,4.3,,,,,,,,,
+Customer n Service,,,,,,,Feb-25,PRODUK 1,9,4.3,,,,,,,,,
+Customer n Service,,,,,,,Feb-25,PRODUK 2,8,4.5,,,,,,,,,
+Customer n Service,,,,,,,Feb-25,PRODUK 3,12,4.7,,,,,,,,,
+Quality,Subdiv 1,,,,,,Jan-25,,,,100,85,85%,90%,91%,,,,
+Quality,Subdiv 2,,,,,,Jan-25,,,,100,95,95%,85%,86%,,,,
+Quality,Subdiv 3,,,,,,Jan-25,,,,100,90,90%,76%,77%,,,,
+Quality,Subdiv 1,,,,,,Feb-25,,,,100,87,87%,91%,90%,,,,
+Quality,Subdiv 2,,,,,,Feb-25,,,,100,94,94%,84%,87%,,,,
+Quality,Subdiv 3,,,,,,Feb-25,,,,100,93,93%,77%,76%,,,,
+Employee,Subdiv 1,,,,,,Jan-25,,,,,,,,,48,50,90%,5%
+Employee,Subdiv 2,,,,,,Jan-25,,,,,,,,,35,35,85%,3%
+Employee,Subdiv 3,,,,,,Jan-25,,,,,,,,,20,20,100%,7%
+Employee,Subdiv 1,,,,,,Feb-25,,,,,,,,,47,50,88%,7%
+Employee,Subdiv 2,,,,,,Feb-25,,,,,,,,,38,40,98%,8%
+Employee,Subdiv 3,,,,,,Feb-25,,,,,,,,,28,35,89%,5%
