@@ -42,9 +42,9 @@ if uploaded_file:
         df_persp = df_selected[df_selected['Perspective'] == perspective]
         df_prev_persp = df_prev[df_prev['Perspective'] == perspective]
 
-        # Tab per subdiv/produk
+        # Tab per subdiv/produk (hardcoded)
         if perspective == "Customer n Service":
-            produk_list = df_persp['Produk'].dropna().unique()
+            produk_list = df_persp['Produk'].dropna().unique().tolist()
             if len(produk_list) > 0:
                 produk_tabs = st.tabs(produk_list)
 
@@ -76,80 +76,77 @@ if uploaded_file:
             else:
                 st.warning(f"Tidak ada data produk untuk {perspective} di bulan {selected_month_str}")
         else:
-            subdiv_list = df_persp['Subdiv'].dropna().unique()
-            if len(subdiv_list) > 0:
-                subdiv_tabs = st.tabs(subdiv_list)
+            subdiv_list = ["Subdiv 1", "Subdiv 2", "Subdiv 3"]
+            subdiv_tabs = st.tabs(subdiv_list)
 
-                for i, subdiv in enumerate(subdiv_list):
-                    with subdiv_tabs[i]:
-                        df_sub = df_persp[df_persp['Subdiv'] == subdiv]
-                        df_sub_prev = df_prev_persp[df_prev_persp['Subdiv'] == subdiv]
+            for i, subdiv in enumerate(subdiv_list):
+                with subdiv_tabs[i]:
+                    df_sub = df_persp[df_persp['Subdiv'] == subdiv]
+                    df_sub_prev = df_prev_persp[df_prev_persp['Subdiv'] == subdiv]
 
-                        if perspective == "Financial":
-                            # Bar chart: Budget vs Expense
-                            fig_bar = go.Figure(data=[
-                                go.Bar(name='Budget', x=df_sub['Subdiv'], y=df_sub['Budget']),
-                                go.Bar(name='Expense', x=df_sub['Subdiv'], y=df_sub['Expense'])
-                            ])
-                            fig_bar.update_layout(barmode='group')
-                            st.plotly_chart(fig_bar, use_container_width=True)
+                    if perspective == "Financial":
+                        # Bar chart: Budget vs Expense
+                        fig_bar = go.Figure(data=[
+                            go.Bar(name='Budget', x=df_sub['Subdiv'], y=df_sub['Budget']),
+                            go.Bar(name='Expense', x=df_sub['Subdiv'], y=df_sub['Expense'])
+                        ])
+                        fig_bar.update_layout(barmode='group')
+                        st.plotly_chart(fig_bar, use_container_width=True)
 
-                            # Gauge chart (interactive)
-                            usage_val_str = df_sub['Usage'].iloc[0] if not df_sub['Usage'].isna().all() else "0%"
-                            usage_val = float(usage_val_str.strip('%'))
-                            fig_gauge = go.Figure(go.Indicator(
-                                mode="gauge+number+delta",
-                                value=usage_val,
-                                delta={'reference': float(df_sub_prev['Usage'].iloc[0].strip('%')) if not df_sub_prev['Usage'].isna().all() else 0},
-                                gauge={'axis': {'range': [0, 150]}},
-                                title={'text': f"Usage (%) - {subdiv}"}
-                            ))
-                            st.plotly_chart(fig_gauge, use_container_width=True)
+                        # Gauge chart (interactive)
+                        usage_val_str = df_sub['Usage'].iloc[0] if not df_sub['Usage'].isna().all() else "0%"
+                        usage_val = float(usage_val_str.strip('%'))
+                        fig_gauge = go.Figure(go.Indicator(
+                            mode="gauge+number+delta",
+                            value=usage_val,
+                            delta={'reference': float(df_sub_prev['Usage'].iloc[0].strip('%')) if not df_sub_prev['Usage'].isna().all() else 0},
+                            gauge={'axis': {'range': [0, 150]}},
+                            title={'text': f"Usage (%) - {subdiv}"}
+                        ))
+                        st.plotly_chart(fig_gauge, use_container_width=True)
 
-                            # Scorecard
-                            profit = df_sub['Profit'].sum()
-                            revenue = df_sub['Revenue'].sum()
-                            profit_prev = df_sub_prev['Profit'].sum()
-                            revenue_prev = df_sub_prev['Revenue'].sum()
-                            st.metric("Profit", f"{profit}", delta=f"{profit - profit_prev}")
-                            st.metric("Revenue", f"{revenue}", delta=f"{revenue - revenue_prev}")
+                        # Scorecard
+                        profit = df_sub['Profit'].sum()
+                        revenue = df_sub['Revenue'].sum()
+                        profit_prev = df_sub_prev['Profit'].sum()
+                        revenue_prev = df_sub_prev['Revenue'].sum()
+                        st.metric("Profit", f"{profit}", delta=f"{profit - profit_prev}")
+                        st.metric("Revenue", f"{revenue}", delta=f"{revenue - revenue_prev}")
 
-                        elif perspective == "Quality":
-                            # Bar chart Target vs Realization
-                            fig = go.Figure()
-                            fig.add_trace(go.Bar(x=df_sub['Subdiv'], y=df_sub['Target'], name='Target'))
-                            fig.add_trace(go.Bar(x=df_sub['Subdiv'], y=df_sub['Realization'], name='Realization'))
-                            fig.update_layout(barmode='group')
-                            st.plotly_chart(fig, use_container_width=True)
+                    elif perspective == "Quality":
+                        # Bar chart Target vs Realization
+                        fig = go.Figure()
+                        fig.add_trace(go.Bar(x=df_sub['Subdiv'], y=df_sub['Target'], name='Target'))
+                        fig.add_trace(go.Bar(x=df_sub['Subdiv'], y=df_sub['Realization'], name='Realization'))
+                        fig.update_layout(barmode='group')
+                        st.plotly_chart(fig, use_container_width=True)
 
-                            # Scorecard
-                            target_vs_real = df_sub['Target vs Real'].astype(str).str.rstrip('%').astype(float).mean()
-                            st.metric("Avg. Target vs Real", f"{target_vs_real:.2f}%")
+                        # Scorecard
+                        target_vs_real = df_sub['Target vs Real'].astype(str).str.rstrip('%').astype(float).mean()
+                        st.metric("Avg. Target vs Real", f"{target_vs_real:.2f}%")
 
-                            velocity = df_sub['Velocity'].astype(str).str.rstrip('%').astype(float).mean()
-                            quality = df_sub['Quality'].astype(str).str.rstrip('%').astype(float).mean()
-                            velocity_prev = df_sub_prev['Velocity'].astype(str).str.rstrip('%').astype(float).mean()
-                            quality_prev = df_sub_prev['Quality'].astype(str).str.rstrip('%').astype(float).mean()
+                        velocity = df_sub['Velocity'].astype(str).str.rstrip('%').astype(float).mean()
+                        quality = df_sub['Quality'].astype(str).str.rstrip('%').astype(float).mean()
+                        velocity_prev = df_sub_prev['Velocity'].astype(str).str.rstrip('%').astype(float).mean()
+                        quality_prev = df_sub_prev['Quality'].astype(str).str.rstrip('%').astype(float).mean()
 
-                            st.metric("Avg. Velocity", f"{velocity:.2f}%", delta=f"{velocity - velocity_prev:.2f}%")
-                            st.metric("Avg. Quality", f"{quality:.2f}%", delta=f"{quality - quality_prev:.2f}%")
+                        st.metric("Avg. Velocity", f"{velocity:.2f}%", delta=f"{velocity - velocity_prev:.2f}%")
+                        st.metric("Avg. Quality", f"{quality:.2f}%", delta=f"{quality - quality_prev:.2f}%")
 
-                        elif perspective == "Employee":
-                            current = df_sub['Current MF'].sum()
-                            needed = df_sub['Needed MF'].sum()
-                            remaining = needed - current
-                            fig_donut = go.Figure(data=[
-                                go.Pie(labels=['Current', 'Remaining'], values=[current, remaining], hole=0.5)
-                            ])
-                            st.plotly_chart(fig_donut, use_container_width=True)
+                    elif perspective == "Employee":
+                        current = df_sub['Current MF'].sum()
+                        needed = df_sub['Needed MF'].sum()
+                        remaining = needed - current
+                        fig_donut = go.Figure(data=[
+                            go.Pie(labels=['Current', 'Remaining'], values=[current, remaining], hole=0.5)
+                        ])
+                        st.plotly_chart(fig_donut, use_container_width=True)
 
-                            # Scorecard
-                            comp = df_sub['Competency'].mean()
-                            turnover = df_sub['Turnover ratio'].astype(str).str.rstrip('%').astype(float).mean()
-                            st.metric("Avg. Competency", f"{comp:.2f}%")
-                            st.metric("Avg. Turnover Ratio", f"{turnover:.2f}%")
-            else:
-                st.warning(f"Tidak ada data subdiv untuk {perspective} di bulan {selected_month_str}")
+                        # Scorecard
+                        comp = df_sub['Competency'].mean()
+                        turnover = df_sub['Turnover ratio'].astype(str).str.rstrip('%').astype(float).mean()
+                        st.metric("Avg. Competency", f"{comp:.2f}%")
+                        st.metric("Avg. Turnover Ratio", f"{turnover:.2f}%")
 
         # Export to PDF
         st.download_button("Export BU1 to PDF (coming soon)", "PDF export belum aktif di demo ini.", file_name="BU1_Dashboard.pdf")
