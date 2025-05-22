@@ -142,10 +142,10 @@ if uploaded_file:
 
                     elif perspective == "Employee":
                         try:
-                            current = df_sub['Current MF'].sum()
-                            needed = df_sub['Needed MF'].sum()
+                            current = df_sub['Current MP'].sum()
+                            needed = df_sub['Needed MP'].sum()
                         except KeyError:
-                            st.error("Kolom 'Current MF' atau 'Needed MF' tidak ditemukan.")
+                            st.error("Kolom 'Current MP' atau 'Needed MP' tidak ditemukan.")
                             continue
                         remaining = needed - current
                         fig_donut = go.Figure(data=[
