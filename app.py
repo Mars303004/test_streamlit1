@@ -37,7 +37,7 @@ if uploaded_file:
     with tabs[1]:
         st.header("BU1 Performance")
 
-        perspective = st.radio("Pilih Perspective", ["Financial", "Customer", "Quality", "Employee"], horizontal=True)
+        perspective = st.radio("Pilih Perspective", ["Financial", "Customer n Service", "Quality", "Employee"], horizontal=True)
 
         df_persp = df_selected[df_selected['Perspective'] == perspective]
         df_prev_persp = df_prev[df_prev['Perspective'] == perspective]
